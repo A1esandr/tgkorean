@@ -1,5 +1,7 @@
 package tgkorean
 
+import "fmt"
+
 type (
 	app struct {
 		token  string
@@ -22,9 +24,13 @@ func (a *app) Start() {
 	letters := ReadCsv("letters.csv")
 	lettersMap := make(map[string]string, len(letters))
 	for _, l := range letters {
-		if len(l) != 2 {
+		if len(l) != 3 {
 			continue
 		}
 		lettersMap[l[0]] = l[1]
+	}
+	for key, value := range lettersMap {
+		fmt.Println(key)
+		fmt.Println(value)
 	}
 }
