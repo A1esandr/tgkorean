@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/A1esandr/tgbotapi"
@@ -12,14 +13,14 @@ import (
 type (
 	app struct {
 		token  string
-		chatID int64
+		chatID interface{}
 	}
 	App interface {
 		Start()
 	}
 	AppParams struct {
 		Token  string
-		ChatID int64
+		ChatID interface{}
 	}
 )
 
@@ -30,17 +31,30 @@ func New(params AppParams) App {
 func (a *app) Start() {
 	letters := ReadCsv("letters.csv")
 	lettersMap := make(map[string]string, len(letters))
+	var sb strings.Builder
 	for _, l := range letters {
 		if len(l) != 3 {
 			continue
 		}
 		lettersMap[l[0]] = l[1]
+		sb.WriteString(l[0])
+		sb.WriteString(" - ")
+		sb.WriteString(l[1])
+		sb.WriteString("\n")
 	}
 	bot, err := tgbotapi.New(a.token)
 	if err != nil {
 		log.Fatal(err)
 	}
 	positions := []int{0, 1, 2, 3}
+	resp, err := bot.SendMessage(&tgbotapi.SendMessage{
+		ChatID: a.chatID,
+		Text:   sb.String(),
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(resp))
 	for key, value := range lettersMap {
 		fmt.Println(key)
 		fmt.Println(value)
@@ -61,6 +75,9 @@ func (a *app) Start() {
 		for i := 0; i < 4; i++ {
 			if i == positions[0] {
 				answers[i] = value
+				continue
+			}
+			if values[i] == value {
 				continue
 			}
 			answers[i] = values[i]

@@ -5,7 +5,6 @@ import (
 	"flag"
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/A1esandr/tgkorean"
 )
@@ -18,7 +17,7 @@ var embedChatID string
 
 func main() {
 	flag.Parse()
-	chatIDStr := os.Getenv("CHAT_ID")
+	chatID := os.Getenv("CHAT_ID")
 	token := os.Getenv("TOKEN")
 	if token == "" {
 		token = embedToken
@@ -26,15 +25,11 @@ func main() {
 	if token == "" {
 		log.Fatal("token is empty!")
 	}
-	if chatIDStr == "" {
-		chatIDStr = embedChatID
+	if chatID == "" {
+		chatID = embedChatID
 	}
-	if chatIDStr == "" {
+	if chatID == "" {
 		log.Fatal("chat id is empty!")
-	}
-	chatID, err := strconv.ParseInt(chatIDStr, 10, 64)
-	if err != nil {
-		log.Fatal(err)
 	}
 	tgkorean.New(tgkorean.AppParams{Token: token, ChatID: chatID}).Start()
 }
