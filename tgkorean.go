@@ -17,6 +17,7 @@ type (
 	}
 	App interface {
 		Start()
+		Send(data []byte)
 	}
 	AppParams struct {
 		Token  string
@@ -30,6 +31,15 @@ func New(params AppParams) App {
 
 func (a *app) Start() {
 	letters := ReadCsv("letters.csv")
+	a.send(letters)
+}
+
+func (a *app) Send(data []byte) {
+	letters := ReadBytesCsv(data)
+	a.send(letters)
+}
+
+func (a *app) send(letters [][]string) {
 	lettersMap := make(map[string]string, len(letters))
 	var sb strings.Builder
 	for _, l := range letters {

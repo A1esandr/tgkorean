@@ -13,6 +13,10 @@ func ReadCsv(name string) [][]string {
 	if err != nil {
 		log.Fatal(err)
 	}
+	return ReadBytesCsv(s)
+}
+
+func ReadBytesCsv(s []byte) [][]string {
 	r := csv.NewReader(bytes.NewReader(s))
 	r.Comma = rune([]byte(";")[0])
 
@@ -28,7 +32,6 @@ func ReadCsv(name string) [][]string {
 		}
 		res = append(res, record)
 	}
-
 	return res
 }
 
